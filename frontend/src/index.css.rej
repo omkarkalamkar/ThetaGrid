@@ -1,0 +1,16 @@
+@@ -107,13 +107,13 @@
+ .card {
+   background: #ffffff;
+   border-radius: var(--radius-lg);
+-  padding: var(--space-md) var(--space-lg);
++  padding: var(--space-sm) var(--space-md);
+   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+   border: 1px solid rgba(0, 0, 0, 0.04);
+ }
+ 
+ .card-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+-  margin-bottom: var(--space-md);
++  margin-bottom: var(--space-sm);
