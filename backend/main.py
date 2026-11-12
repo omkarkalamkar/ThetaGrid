@@ -325,13 +325,15 @@ async def scrape_gift_nifty():
                     # </a>
                     
                     # First try to find the Gift Nifty tape item
-                    gift_pattern = r'<a class="gn-tape-i"[^>]*href="https://giftnifty\.org/"[^>]*>.*?<span class="gn-tape-n">Gift Nifty</span>\s*<span class="gn-mono">([\d,\.]+)</span>\s*<span class="gn-mono (\w+)">([\+\-]?\d+\.\d+)%</span>'
+                    # Note: Website uses Unicode minus (U+2212) instead of hyphen
+                    gift_pattern = r'<a class="gn-tape-i"[^>]*href="https://giftnifty\.org/"[^>]*>.*?<span class="gn-tape-n">Gift Nifty</span>\s*<span class="gn-mono">([\d,\.]+)</span>\s*<span class="gn-mono (\w+)">([+\-−]?\d+\.\d+)%</span>'
                     match = re.search(gift_pattern, html, re.DOTALL)
                     
                     if match:
                         price_str = match.group(1).replace(",", "")
                         change_type = match.group(2)  # "up" or "down" for class
-                        change_pct = float(match.group(3))
+                        change_str = match.group(3).replace("−", "-")  # Replace Unicode minus with regular minus
+                        change_pct = float(change_str)
                         
                         price = float(price_str)
                         
