@@ -24,7 +24,7 @@ function App() {
   const [isDemo, setIsDemo] = useState(true)
   const [isConfigured, setIsConfigured] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
-  const [mobileView, setMobileView] = useState('home') // home, straddle, chain, buildup
+  const [mobileView, setMobileView] = useState('home') // home, levels, straddle, chain, buildup
   const wsRef = useRef(null)
   const reconnectTimer = useRef(null)
 
@@ -315,6 +315,16 @@ function App() {
             </div>
           )}
 
+          {/* Levels Page */}
+          {mobileView === 'levels' && (
+            <div className="mobile-page">
+              {/* Key Levels */}
+              <div className="card" style={{ padding: '10px', marginBottom: '12px' }}>
+                <KeyLevels niftyData={marketData?.nifty} sensexData={marketData?.sensex} />
+              </div>
+            </div>
+          )}
+
           {/* Straddle Page */}
           {mobileView === 'straddle' && (
             <div className="mobile-page">
@@ -418,6 +428,20 @@ function App() {
               <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             <span className="mobile-nav-label">Home</span>
+          </button>
+          <button 
+            className={`mobile-nav-btn ${mobileView === 'levels' ? 'active' : ''}`}
+            onClick={() => setMobileView('levels')}
+          >
+            <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+              <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
+              <circle cx="6" cy="12" r="1.5" fill="currentColor"/>
+              <circle cx="6" cy="18" r="1.5" fill="currentColor"/>
+            </svg>
+            <span className="mobile-nav-label">Levels</span>
           </button>
           <button 
             className={`mobile-nav-btn ${mobileView === 'straddle' ? 'active' : ''}`}
