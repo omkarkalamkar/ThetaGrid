@@ -960,3 +960,195 @@ body::before {
 .position-row:hover {
   background-color: #f8fafc;
 }
+
+/* ========================================
+   MOBILE OPTIMIZATION (MOBILE ONLY)
+   Desktop view remains unchanged
+   ======================================== */
+
+/* Hide mobile elements on desktop */
+.mobile-view,
+.mobile-nav {
+  display: none;
+}
+
+/* Show desktop by default */
+.desktop-view {
+  display: contents;
+}
+
+/* Mobile-only styles */
+@media (max-width: 900px) {
+  /* Hide desktop view on mobile */
+  .desktop-view {
+    display: none !important;
+  }
+
+  /* Show mobile view */
+  .mobile-view {
+    display: block;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  /* Mobile page container */
+  .mobile-page {
+    padding: 0;
+  }
+
+  /* Dashboard adjustments */
+  .dashboard {
+    padding: 8px;
+    height: calc(100vh - 44px);
+    overflow: hidden;
+  }
+
+  /* Mobile Bottom Navigation */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    padding: 8px 4px;
+    gap: 4px;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .mobile-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 4px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #64748b;
+  }
+
+  .mobile-nav-btn.active {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+  }
+
+  .mobile-nav-btn:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-nav-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .mobile-nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* Mobile spot cards */
+  .mobile-view .spot-card {
+    padding: 8px;
+  }
+
+  .mobile-view .spot-value {
+    font-size: 18px;
+  }
+
+  /* Mobile key levels adjustments */
+  .mobile-view .key-levels-horizontal {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .mobile-view .key-level-block {
+    min-width: 120px;
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  /* Mobile tab switcher */
+  .mobile-view .tab-switcher {
+    display: flex;
+    width: 100%;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+  }
+
+  .mobile-view .tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  /* Mobile cards spacing */
+  .mobile-view .card {
+    margin-bottom: 8px;
+  }
+
+  /* Chart container adjustments for mobile */
+  .mobile-view .chart-container {
+    min-height: 250px;
+  }
+
+  /* Topbar adjustments for mobile */
+  .topbar {
+    padding: 6px 12px;
+  }
+
+  .topbar-title {
+    font-size: 16px;
+  }
+
+  .topbar-subtitle {
+    display: none;
+  }
+
+  .topbar-logo {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .topbar-time {
+    font-size: 11px;
+  }
+}
+
+/* iPhone SE and smaller screens */
+@media (max-width: 375px) {
+  .mobile-nav {
+    padding: 6px 2px;
+  }
+
+  .mobile-nav-btn {
+    padding: 6px 2px;
+  }
+
+  .mobile-nav-icon {
+    font-size: 20px;
+  }
+
+  .mobile-nav-label {
+    font-size: 10px;
+  }
+
+  .dashboard {
+    padding: 6px;
+  }
+}

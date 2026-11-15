@@ -24,6 +24,7 @@ function App() {
   const [isDemo, setIsDemo] = useState(true)
   const [isConfigured, setIsConfigured] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [mobileView, setMobileView] = useState('home') // home, straddle, chain, buildup
   const wsRef = useRef(null)
   const reconnectTimer = useRef(null)
 
@@ -181,6 +182,8 @@ function App() {
 
       <main className="dashboard">
 
+        {/* Desktop View - Always visible on desktop */}
+        <div className="desktop-view">
           {/* ── ROW 1: Spot Cards strip ── */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', flexShrink: 0 }}>
             <SpotCard label="NIFTY 50" value={marketData?.nifty?.spot} change={marketData?.nifty?.change} pointsChange={marketData?.nifty?.points_change} delay={1} />
@@ -286,8 +289,162 @@ function App() {
             </div>
 
           </div>
+        </div>
 
-        </main>
+        {/* Mobile View - Only visible on mobile */}
+        <div className="mobile-view">
+          
+          {/* Home Page */}
+          {mobileView === 'home' && (
+            <div className="mobile-page">
+              {/* Spot Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', marginBottom: '6px' }}>
+                <SpotCard label="NIFTY 50" value={marketData?.nifty?.spot} change={marketData?.nifty?.change} pointsChange={marketData?.nifty?.points_change} delay={1} />
+                <SpotCard label="SENSEX" value={marketData?.sensex?.spot} change={marketData?.sensex?.change} pointsChange={marketData?.sensex?.points_change} delay={2} />
+                <SpotCard label="INDIA VIX" value={marketData?.vix?.value} change={marketData?.vix?.change} pointsChange={marketData?.vix?.points_change} suffix="" delay={3} />
+                <SpotCard label="GIFT NIFTY" value={marketData?.gift_nifty?.value} change={marketData?.gift_nifty?.change} pointsChange={marketData?.gift_nifty?.points_change} delay={4} />
+              </div>
+
+              {/* Key Levels */}
+              <div className="card" style={{ marginBottom: '6px', padding: '8px' }}>
+                <KeyLevels niftyData={marketData?.nifty} sensexData={marketData?.sensex} />
+              </div>
+
+              {/* Positions */}
+              <Positions 
+                isConfigured={isConfigured} 
+                onLoginClick={() => setShowLoginModal(true)} 
+                marketData={marketData}
+                optionChain={optionChain}
+              />
+            </div>
+          )}
+
+          {/* Straddle Page */}
+          {mobileView === 'straddle' && (
+            <div className="mobile-page">
+              {/* Index Switcher */}
+              <div className="tab-switcher" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                <button className={`tab-btn ${selectedIndex === 'NIFTY' ? 'active' : ''}`} onClick={() => setSelectedIndex('NIFTY')}>NIFTY</button>
+                <button className={`tab-btn ${selectedIndex === 'SENSEX' ? 'active' : ''}`} onClick={() => setSelectedIndex('SENSEX')}>SENSEX</button>
+              </div>
+
+              {/* NIFTY Straddle */}
+              <div className="card" style={{ marginBottom: '12px', padding: '10px', minHeight: '300px', display: 'flex', flexDirection: 'column' }}>
+                <div className="card-header" style={{ marginBottom: '8px' }}>
+                  <span className="card-title">NIFTY Straddle Premium</span>
+                  <span style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#2563eb' }}>
+                    {marketData?.nifty?.straddle_premium ? Math.round(marketData.nifty.straddle_premium) : '—'}
+                  </span>
+                </div>
+                <div style={{ flex: 1, minHeight: 0 }}>
+                  <StraddleChart
+                    data={straddleHistory['NIFTY']}
+                    currentPremium={marketData?.nifty?.straddle_premium}
+                    index="NIFTY"
+                  />
+                </div>
+              </div>
+
+              {/* SENSEX Straddle */}
+              <div className="card" style={{ padding: '10px', minHeight: '300px', display: 'flex', flexDirection: 'column' }}>
+                <div className="card-header" style={{ marginBottom: '8px' }}>
+                  <span className="card-title">SENSEX Straddle Premium</span>
+                  <span style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#2563eb' }}>
+                    {marketData?.sensex?.straddle_premium ? Math.round(marketData.sensex.straddle_premium) : '—'}
+                  </span>
+                </div>
+                <div style={{ flex: 1, minHeight: 0 }}>
+                  <StraddleChart
+                    data={straddleHistory['SENSEX']}
+                    currentPremium={marketData?.sensex?.straddle_premium}
+                    index="SENSEX"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Chain (Heatmap) Page */}
+          {mobileView === 'chain' && (
+            <div className="mobile-page">
+              {/* Index Switcher */}
+              <div className="tab-switcher" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                <button className={`tab-btn ${selectedIndex === 'NIFTY' ? 'active' : ''}`} onClick={() => setSelectedIndex('NIFTY')}>NIFTY</button>
+                <button className={`tab-btn ${selectedIndex === 'SENSEX' ? 'active' : ''}`} onClick={() => setSelectedIndex('SENSEX')}>SENSEX</button>
+              </div>
+
+              {/* OI Heatmap */}
+              <div className="card" style={{ padding: '10px', minHeight: '400px', display: 'flex', flexDirection: 'column' }}>
+                <div className="card-header" style={{ marginBottom: '8px' }}>
+                  <span className="card-title">OI Heatmap</span>
+                </div>
+                <div style={{ flex: 1, overflow: 'auto' }}>
+                  <OIHeatmap
+                    chain={optionChain[selectedIndex]}
+                    atmStrike={idxData?.atm_strike}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Buildup Page */}
+          {mobileView === 'buildup' && (
+            <div className="mobile-page">
+              {/* Index Switcher */}
+              <div className="tab-switcher" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                <button className={`tab-btn ${selectedIndex === 'NIFTY' ? 'active' : ''}`} onClick={() => setSelectedIndex('NIFTY')}>NIFTY</button>
+                <button className={`tab-btn ${selectedIndex === 'SENSEX' ? 'active' : ''}`} onClick={() => setSelectedIndex('SENSEX')}>SENSEX</button>
+              </div>
+
+              {/* OI Buildup */}
+              <div className="card" style={{ padding: '10px', minHeight: '500px', display: 'flex', flexDirection: 'column' }}>
+                <div className="card-header" style={{ marginBottom: '8px' }}>
+                  <span className="card-title">OI Buildup</span>
+                </div>
+                <div style={{ flex: 1, overflow: 'auto' }}>
+                  <OIBuildupPanel index={selectedIndex} />
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* Mobile Bottom Navigation */}
+        <nav className="mobile-nav">
+          <button 
+            className={`mobile-nav-btn ${mobileView === 'home' ? 'active' : ''}`}
+            onClick={() => setMobileView('home')}
+          >
+            <span className="mobile-nav-icon">🏠</span>
+            <span className="mobile-nav-label">Home</span>
+          </button>
+          <button 
+            className={`mobile-nav-btn ${mobileView === 'straddle' ? 'active' : ''}`}
+            onClick={() => setMobileView('straddle')}
+          >
+            <span className="mobile-nav-icon">📈</span>
+            <span className="mobile-nav-label">Straddle</span>
+          </button>
+          <button 
+            className={`mobile-nav-btn ${mobileView === 'chain' ? 'active' : ''}`}
+            onClick={() => setMobileView('chain')}
+          >
+            <span className="mobile-nav-icon">🔥</span>
+            <span className="mobile-nav-label">Chain</span>
+          </button>
+          <button 
+            className={`mobile-nav-btn ${mobileView === 'buildup' ? 'active' : ''}`}
+            onClick={() => setMobileView('buildup')}
+          >
+            <span className="mobile-nav-icon">📊</span>
+            <span className="mobile-nav-label">Buildup</span>
+          </button>
+        </nav>
+
+      </main>
     </div>
   )
 }
