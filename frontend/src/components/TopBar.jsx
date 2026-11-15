@@ -30,15 +30,6 @@ export default function TopBar({ connected, isDemo, currentPage, setCurrentPage 
         </div>
       </div>
 
-      <div className="topbar-nav">
-        <button 
-          className="nav-btn active"
-          style={{ cursor: 'default' }}
-        >
-          Dashboard
-        </button>
-      </div>
-
       <div className="topbar-status">
         <div className={`status-badge ${isDemo ? 'demo' : 'live'}`}>
           <span className="status-dot"></span>

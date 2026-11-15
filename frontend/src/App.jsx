@@ -297,7 +297,7 @@ function App() {
           {/* Home Page */}
           {mobileView === 'home' && (
             <div className="mobile-page">
-              {/* Spot Cards */}
+              {/* Spot Cards - Compact 2x2 grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', marginBottom: '6px' }}>
                 <SpotCard label="NIFTY 50" value={marketData?.nifty?.spot} change={marketData?.nifty?.change} pointsChange={marketData?.nifty?.points_change} delay={1} />
                 <SpotCard label="SENSEX" value={marketData?.sensex?.spot} change={marketData?.sensex?.change} pointsChange={marketData?.sensex?.points_change} delay={2} />
@@ -305,12 +305,7 @@ function App() {
                 <SpotCard label="GIFT NIFTY" value={marketData?.gift_nifty?.value} change={marketData?.gift_nifty?.change} pointsChange={marketData?.gift_nifty?.points_change} delay={4} />
               </div>
 
-              {/* Key Levels */}
-              <div className="card" style={{ marginBottom: '6px', padding: '8px' }}>
-                <KeyLevels niftyData={marketData?.nifty} sensexData={marketData?.sensex} />
-              </div>
-
-              {/* Positions */}
+              {/* Positions - Visible without scrolling */}
               <Positions 
                 isConfigured={isConfigured} 
                 onLoginClick={() => setShowLoginModal(true)} 
@@ -418,28 +413,42 @@ function App() {
             className={`mobile-nav-btn ${mobileView === 'home' ? 'active' : ''}`}
             onClick={() => setMobileView('home')}
           >
-            <span className="mobile-nav-icon">🏠</span>
+            <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
             <span className="mobile-nav-label">Home</span>
           </button>
           <button 
             className={`mobile-nav-btn ${mobileView === 'straddle' ? 'active' : ''}`}
             onClick={() => setMobileView('straddle')}
           >
-            <span className="mobile-nav-icon">📈</span>
+            <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
             <span className="mobile-nav-label">Straddle</span>
           </button>
           <button 
             className={`mobile-nav-btn ${mobileView === 'chain' ? 'active' : ''}`}
             onClick={() => setMobileView('chain')}
           >
-            <span className="mobile-nav-icon">🔥</span>
+            <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
             <span className="mobile-nav-label">Chain</span>
           </button>
           <button 
             className={`mobile-nav-btn ${mobileView === 'buildup' ? 'active' : ''}`}
             onClick={() => setMobileView('buildup')}
           >
-            <span className="mobile-nav-icon">📊</span>
+            <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="20" x2="12" y2="10"/>
+              <line x1="18" y1="20" x2="18" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="16"/>
+            </svg>
             <span className="mobile-nav-label">Buildup</span>
           </button>
         </nav>
