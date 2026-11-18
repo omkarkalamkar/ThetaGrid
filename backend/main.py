@@ -576,10 +576,11 @@ async def broadcast_loop():
                 
                 # Only record history during market hours, stopping at 15:40
                 is_after_market = (now.hour > 15) or (now.hour == 15 and now.minute >= 40)
+                is_before_market = (now.hour < 9) or (now.hour == 9 and now.minute < 15)
                 
                 premium = data[idx_lower]["straddle_premium"]
                 
-                if not is_after_market:
+                if not is_after_market and not is_before_market:
                     # Hard cap: reject obviously glitched values
                     max_sane = 600 if idx == "NIFTY" else 1600
                     if premium > max_sane or premium <= 0:
