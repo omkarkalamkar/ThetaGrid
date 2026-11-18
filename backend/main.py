@@ -6,6 +6,8 @@ import asyncio
 import json
 import math
 import random
+import pytz
+IST = pytz.timezone("Asia/Kolkata")
 import time
 import logging
 import os
@@ -54,7 +56,7 @@ def load_straddle_history() -> Dict[str, List[Dict]]:
                     # We assume it resets every day. If it's a new day, we just clear it.
                     # A robust way is checking the date of the file.
                     file_time = datetime.fromtimestamp(os.path.getmtime(hist_file))
-                    if file_time.date() != datetime.now().date():
+                    if file_time.date() != datetime.now(IST).date():
                         return {"NIFTY": [], "SENSEX": []}
                 return data
         except Exception as e:
@@ -151,7 +153,7 @@ def generate_live_option_chain(index: str, spot_price: float, dte_years: float =
     # Build chain and populate live data
     # Reset baseline if it's a new day
     global oi_baseline_date
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    today_str = datetime.now(IST).strftime("%Y-%m-%d")
     if oi_baseline_date != today_str:
         oi_baseline["NIFTY"] = {}
         oi_baseline["SENSEX"] = {}
@@ -415,7 +417,7 @@ async def broadcast_loop():
                     live_engine.disconnected_ticks = 0
 
                 data = {
-                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    "timestamp": datetime.now(IST).strftime("%H:%M:%S"),
                     "demo_mode": False,
                     "nifty": {"prev_close": market_state["nifty"]["prev_close"]},
                     "sensex": {"prev_close": market_state["sensex"]["prev_close"]},
@@ -541,7 +543,7 @@ async def broadcast_loop():
 
             market_state.update(data)
             
-            now = datetime.now()
+            now = datetime.now(IST)
             
             # Periodically update persistence store
             if now.second % 15 == 0:
@@ -558,7 +560,7 @@ async def broadcast_loop():
                         market_state["vix"]["prev_close"] = new_prev.get("VIX", market_state["vix"]["prev_close"])
 
             # Append straddle history
-            now = datetime.now()
+            now = datetime.now(IST)
             now_str = now.strftime("%H:%M:%S")
             
             # Reset history at 9:15 AM (start of trading day)
@@ -712,7 +714,7 @@ async def get_status():
         "status": "ok",
         "mode": "live" if (is_configured() and smart_client.authenticated) else "demo",
         "is_configured": is_configured(),
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(IST).isoformat(),
     }
 
 class BrokerLoginRequest(BaseModel):
@@ -811,7 +813,7 @@ async def get_option_chain(index: str = "NIFTY"):
     return {
         "index": index,
         "chain": global_chains.get(index, []),
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(IST).isoformat(),
     }
 
 
@@ -896,7 +898,7 @@ async def get_buildup_summary(index: str = "NIFTY"):
         "put_counts": put_counts,
         "top_call_movers": call_movers[:5],
         "top_put_movers": put_movers[:5],
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(IST).isoformat(),
     }
 
 
