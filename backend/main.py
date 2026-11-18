@@ -585,7 +585,7 @@ async def broadcast_loop():
                     if premium > max_sane or premium <= 0:
                         continue
                     
-                    if len(straddle_history[idx]) == 0 or (now - datetime.strptime(straddle_history[idx][-1]["time"], "%H:%M:%S").replace(year=now.year, month=now.month, day=now.day)).total_seconds() >= 60:
+                    if len(straddle_history[idx]) == 0 or (now - IST.localize(datetime.strptime(straddle_history[idx][-1]["time"], "%H:%M:%S").replace(year=now.year, month=now.month, day=now.day))).total_seconds() >= 60:
                         # Calculate VWAP proxy (Cumulative Average)
                         current_count = len(straddle_history[idx])
                         if current_count > 0:
